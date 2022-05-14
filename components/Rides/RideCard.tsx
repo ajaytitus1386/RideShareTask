@@ -1,0 +1,64 @@
+import React from "react";
+import { Ride } from "../../models/ride";
+import OvalCard from "./OvalCard";
+
+const RideCard = ({ ride, distance }: { ride: Ride; distance: number }) => {
+  var stationPathLabel = "[";
+  ride.station_path.forEach((station_code) => {
+    stationPathLabel += station_code.toString() + ", ";
+  });
+  //Remove last comma
+  stationPathLabel = stationPathLabel.slice(0, -2);
+  stationPathLabel += "]";
+
+  const date = Date.parse(ride.date);
+  const formattedDate = Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    hourCycle: "h24",
+    minute: "numeric",
+  }).format(date);
+
+  return (
+    <div className="flex flex-row items-start justify-between w-full p-8 rounded-md text-lightGray h-fit bg-coal">
+      <div className="flex flex-row space-x-4">
+        {/* Image */}
+        <div className="h-full rounded-md w-72 ">
+          <img src={"/assets/satmap.png"}></img>
+        </div>
+        {/* Ride Info */}
+        <div>
+          <ul className="flex flex-col px-8 space-y-2">
+            <li>
+              Ride Id: <strong className="text-primary">{ride.id}</strong>
+            </li>
+            <li>
+              Origin Station:{" "}
+              <strong className="text-primary">
+                {ride.origin_station_code}
+              </strong>
+            </li>
+            <li>
+              Station Path:{" "}
+              <strong className="text-primary">{stationPathLabel}</strong>
+            </li>
+            <li>
+              Date: <strong className="text-primary">{formattedDate}</strong>
+            </li>
+            <li>
+              Distance: <strong className="text-primary">{distance}</strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="flex flex-row space-x-2 text-primary">
+        <OvalCard label={ride.city}></OvalCard>
+        <OvalCard label={ride.state}></OvalCard>
+      </div>
+    </div>
+  );
+};
+
+export default RideCard;
