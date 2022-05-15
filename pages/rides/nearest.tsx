@@ -266,7 +266,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
             <div className="flex flex-col items-center justify-center space-y-2">
               <i className="text-5xl material-icons text-primary">error</i>
               <div className="flex justify-center px-4 py-2 text-lg font-bold tracking-wide rounded-lg w-fit bg-coal text-primary">
-                Sorry, we couldn't find any rides here! Try again later!
+                Sorry, we could not find any rides here! Try again later!
               </div>
             </div>
           )}
