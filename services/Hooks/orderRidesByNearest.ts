@@ -2,6 +2,11 @@ import { Ride } from "../../models/ride";
 import { User } from "../../models/user";
 import MakeDistanceFromUser from "./makeDistancefronUser";
 
+/**
+ * Returns a list of Rides based on the least distance
+ * @param param0
+ * @returns
+ */
 export default function orderRidesByNearest({
   rides,
   user,
