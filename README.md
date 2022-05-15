@@ -1,34 +1,90 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<hr>
+<h1 style="text-align:center;width:100%;">Ride Share</h1>
+<hr>
 
-## Getting Started
+- [:rocket: Getting Started](#rocket-getting-started)
+- [:ledger: Project Structure](#ledger-project-structure)
+  - [:page_facing_up: Pages](#page_facing_up-pages)
+    - [Nearest Rides](#nearest-rides)
+  - [:gear: Services](#gear-services)
+    - [Hooks](#hooks)
+    - [Rides](#rides)
+    - [Users](#users)
+    - [Components](#components)
+  - [:open_file_folder: Models](#open_file_folder-models)
 
-First, run the development server:
+## :rocket: Getting Started
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+1. Clone the repository from `https://github.com/ajaytitus1386/RideShareTask.git` using your preferred method.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Next, navigate to the root of the project and install the dependencies:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   yarn install
+   ```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+3. Then, run the **development server**:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+   ```bash
+   yarn dev
+   ```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) with your browser to see a development preview.
 
-To learn more about Next.js, take a look at the following resources:
+<hr>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Or just head to [https://ride-share-task.vercel.app/](https://ride-share-task.vercel.app/) to see the **deployed build**!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## :ledger: Project Structure
 
-## Deploy on Vercel
+### :page_facing_up: Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+NextJS conveniently handles page routing by integrating it into the folder structure. For example here, the file `rides/nearest.tsx` would lead to the route `localhost:3000/rides/nearest`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The `_app.tsx` file is the root of the project followed by `index.tsx` which here immediately re-directs to the nearest rides page.
+`_document.tsx` is a server-rendered page that is used to update the `<head>` tags throughout the app.
+
+#### Nearest Rides
+
+`rides/nearest.tsx` is the landing and primary page of the web app. The page is pre-rendered at build time using `getStaticProps` to fetch User and Rides.
+`UseEffect` and `UseState` Hooks are applied to manage state and state updates.
+By default, all the rides will be ordered by nearest and rendered as cards. Three tabs: Nearest, Upcoming and Past can be used to filter the rides according to their dates _(Nearest does no filtering and returns the full list of Rides)_.
+
+The Filters Tab to the right will open on either Click or Hover Over events from the cursor. It reveals two more dropdowns for States and Cities respectively.
+
+- Selecting an option from either one, will filter the list of rides and render only the filtered Rides
+- Selecting State first will consider only the **cities within the selected State**.
+- The Close icon can be used to clear both filters.
+
+<hr>
+
+### :gear: Services
+
+#### Hooks
+
+Re-usable and parametrized functions that can be used to manipulate or control data, in particular with the list of rides fetched.
+Includes functionality such as:
+
+- Filter rides by City and/or State
+- Filter rides by Upcoming or Past
+- Calculate distance between User and the closest station in a given Ride
+- Generate list of cities or states from a list of rides
+- Order the rides into a list by their distance to the User
+
+#### Rides
+
+API calls made to operate on Ride data. Only contains a GET call to fetch rides
+
+#### Users
+
+API calls made to operate on User data. Only contains a GET call to fetch the current user
+
+#### Components
+
+Re-usable Javascript components
+
+<hr>
+
+### :open_file_folder: Models
+
+A set of data object templates to enforce type safety when handling fetched API response data.
