@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { User } from "../models/user";
-import getUser from "../services/users/getUser";
 
 const NavBar = ({ user }: { user: User }) => {
   return (

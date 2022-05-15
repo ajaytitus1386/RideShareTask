@@ -97,10 +97,11 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
    */
   function setRidesToPast() {
     clearFilters();
-    setInitializedRides(filterRidesByPast({ rides: data }));
+    const pastRides = filterRidesByPast({ rides: data });
+    setInitializedRides(pastRides);
     setNearestRides(
       orderRidesByNearest({
-        rides: filterRidesByPast({ rides: data }),
+        rides: pastRides,
         user: user,
       })
     );
@@ -112,10 +113,11 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
    */
   function setRidesToUpcoming() {
     clearFilters();
-    setInitializedRides(filterRidesByUpcoming({ rides: data }));
+    const upcomingRides = filterRidesByUpcoming({ rides: data });
+    setInitializedRides(upcomingRides);
     setNearestRides(
       orderRidesByNearest({
-        rides: filterRidesByUpcoming({ rides: data }),
+        rides: upcomingRides,
         user: user,
       })
     );
