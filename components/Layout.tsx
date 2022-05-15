@@ -2,6 +2,7 @@ import Head from "next/head";
 import React from "react";
 import { User } from "../models/user";
 import NavBar from "./NavBar";
+import ScrollToTop from "./ScrollToTop";
 
 const Layout = ({ children, user }: { children: any; user: User }) => {
   return (
@@ -12,6 +13,7 @@ const Layout = ({ children, user }: { children: any; user: User }) => {
       </Head>
       <NavBar user={user}></NavBar>
       <div>{children}</div>
+      <ScrollToTop />
     </div>
   );
 };
