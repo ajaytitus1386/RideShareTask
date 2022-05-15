@@ -81,7 +81,7 @@ API calls made to operate on User data. Only contains a GET call to fetch the cu
 
 #### Components
 
-Re-usable Javascript components
+Re-usable Javascript components ordered based on pages they are scoped to or in global scope.
 
 <hr>
 
