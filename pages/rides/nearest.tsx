@@ -96,6 +96,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
    * Sets nearest rides to past-filtered rides, which is resposible for rendering rides
    */
   function setRidesToPast() {
+    clearFilters();
     setInitializedRides(filterRidesByPast({ rides: data }));
     setNearestRides(
       orderRidesByNearest({
@@ -254,6 +255,11 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
                 ></RideCard>
               );
             })}
+          {nearestRides.length == 0 && (
+            <div className="flex justify-center text-lg font-bold tracking-wide text-primary">
+              Sorry, we could not find rides here! Try again later!
+            </div>
+          )}
         </div>
       </div>
     </Layout>
