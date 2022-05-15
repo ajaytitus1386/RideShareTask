@@ -258,6 +258,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
                       .leastDistance
                   }
                   ride={ride}
+                  key={ride.id.toString + ride.date}
                 ></RideCard>
               );
             })}
