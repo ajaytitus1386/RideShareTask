@@ -186,7 +186,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
                 isSelected={tabSelected == 0}
                 setIsSelected={setTabSelected}
                 tabFunction={setRidesToDefault}
-                label={"Nearest"}
+                label={"Nearest rides"}
                 id={0}
               />
               {upcomingRides && (
@@ -194,7 +194,9 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
                   isSelected={tabSelected == 1}
                   setIsSelected={setTabSelected}
                   tabFunction={setRidesToUpcoming}
-                  label={"Upcoming (" + upcomingRides.length.toString() + ")"}
+                  label={
+                    "Upcoming rides (" + upcomingRides.length.toString() + ")"
+                  }
                   id={1}
                 />
               )}
@@ -203,7 +205,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
                   isSelected={tabSelected == 2}
                   setIsSelected={setTabSelected}
                   tabFunction={setRidesToPast}
-                  label={"Past (" + pastRides.length.toString() + ")"}
+                  label={"Past rides (" + pastRides.length.toString() + ")"}
                   id={2}
                 />
               )}
