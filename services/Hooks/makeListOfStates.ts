@@ -7,6 +7,7 @@ export default function MakeListOfStates({ rides }: { rides: Ride[] }) {
       states.push(ride.state);
     }
   });
+  states.sort((a, b) => a.localeCompare(b));
 
   return states;
 }

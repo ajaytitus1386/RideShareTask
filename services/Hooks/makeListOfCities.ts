@@ -9,13 +9,13 @@ export default function MakeListOfCities({
 }) {
   var cities: string[] = [];
   rides.forEach((ride) => {
-    //TODO: consider same State also
     if (!cities.includes(ride.city)) {
       if (state != "") {
         if (ride.state == state) cities.push(ride.city);
       } else cities.push(ride.city);
     }
   });
+  cities.sort((a, b) => a.localeCompare(b));
 
   return cities;
 }
