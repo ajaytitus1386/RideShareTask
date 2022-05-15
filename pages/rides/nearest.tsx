@@ -138,6 +138,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
             <div
               ref={moreWrapperRef}
               onClick={toggleFilters}
+              onMouseEnter={toggleFilters}
               className="flex flex-row w-auto p-1 space-x-2 text-xl rounded-md text-primary hover:bg-coal "
             >
               <i className="material-icons">{"filter_list"}</i>
