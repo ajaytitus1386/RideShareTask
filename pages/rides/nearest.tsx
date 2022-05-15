@@ -111,6 +111,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
    * Sets nearest rides to future-filtered rides, which is resposible for rendering rides
    */
   function setRidesToUpcoming() {
+    clearFilters();
     setInitializedRides(filterRidesByUpcoming({ rides: data }));
     setNearestRides(
       orderRidesByNearest({
@@ -125,6 +126,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
    * Set nearest rides to raw data ordered by nearest, which is resposible for rendering rides
    */
   function setRidesToDefault() {
+    clearFilters();
     setInitializedRides(data);
     setNearestRides(
       orderRidesByNearest({
