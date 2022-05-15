@@ -8,7 +8,6 @@ import MakeDistanceFromUser from "../../services/Hooks/makeDistancefronUser";
 import orderRidesByNearest from "../../services/Hooks/orderRidesByNearest";
 import filterRidesByUpcoming from "../../services/Hooks/filterRidesByUpcoming";
 import filterRidesByPast from "../../services/Hooks/filterRidesByPast";
-import Link from "next/link";
 import RideCard from "../../components/Rides/RideCard";
 import FiltersDropdown from "../../components/Rides/FiltersDropdown";
 import SubDropdown from "../../components/Rides/SubDropdown";
@@ -17,24 +16,30 @@ import FilterByCity from "../../services/Hooks/filterByCity";
 import MakeListOfCities from "../../services/Hooks/makeListOfCities";
 import FilterByState from "../../services/Hooks/filterByState";
 import Layout from "../../components/Layout";
+import TabHeading from "../../components/Nearest/TabHeading";
 
 function Nearest({ data, user }: { data: Ride[]; user: User }) {
   // Rides States
   const [nearestRides, setNearestRides] = useState<Ride[]>([]);
   const [upcomingRides, setUpcomingRides] = useState<Ride[]>([]);
   const [pastRides, setPastRides] = useState<Ride[]>([]);
+  // Chnages based on the tab selected (Nearest, Upcoming or Past)
+  const [initializedRides, setInitializedRides] = useState<Ride[]>(data);
 
   // Filters States
   const [showFilters, setShowFilters] = useState(false);
   const [stateFilter, setStateFilter] = useState("");
   const [cityFilter, setCityFilter] = useState("");
 
+  // Tab Selector
+  const [tabSelected, setTabSelected] = useState(0);
+
   //Initialization
   useEffect(() => {
     setNearestRides(orderRidesByNearest({ rides: data, user: user }));
   }, [data]);
 
-  // Tab counter updates
+  // Tab head counter updates
   useEffect(() => {
     setUpcomingRides(filterRidesByUpcoming({ rides: nearestRides }));
     setPastRides(filterRidesByPast({ rides: nearestRides }));
@@ -43,15 +48,23 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
   // City Filter Updates
   useEffect(() => {
     if (cityFilter != "") {
-      const cityFilteredRides = FilterByCity({ rides: data, city: cityFilter });
+      const cityFilteredRides = FilterByCity({
+        rides: initializedRides,
+        city: cityFilter,
+      });
       setNearestRides(
         orderRidesByNearest({ rides: cityFilteredRides, user: user })
       );
     }
-    // In case State filter is already used and gets changed
+    // In case State filter is already used and gets updated then city does not interfere with filtering
     else if (stateFilter != "") {
       return;
-    } else setNearestRides(orderRidesByNearest({ rides: data, user: user }));
+    }
+    // Reset filter and set rides back to thier initialized state
+    else
+      setNearestRides(
+        orderRidesByNearest({ rides: initializedRides, user: user })
+      );
   }, [cityFilter]);
 
   // State Filter Updates
@@ -60,16 +73,70 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
       // Remove any city filter if State is changed
       if (cityFilter != "") setCityFilter("");
       const stateFilteredRides = FilterByState({
-        rides: data,
+        rides: initializedRides,
         state: stateFilter,
       });
 
       setNearestRides(
         orderRidesByNearest({ rides: stateFilteredRides, user: user })
       );
-    } else setNearestRides(orderRidesByNearest({ rides: data, user: user }));
+    }
+    // Reset filter and set rides back to thier initialized state
+    else
+      setNearestRides(
+        orderRidesByNearest({ rides: initializedRides, user: user })
+      );
   }, [stateFilter]);
 
+  //
+  // Function to control tab heads: Nearest, Upcoming and Past
+  //
+  /**
+   * When "Past" tab is selected, set initialized rides to only rides from the past
+   * Sets nearest rides to past-filtered rides, which is resposible for rendering rides
+   */
+  function setRidesToPast() {
+    clearFilters();
+    setInitializedRides(filterRidesByPast({ rides: data }));
+    setNearestRides(
+      orderRidesByNearest({
+        rides: filterRidesByPast({ rides: data }),
+        user: user,
+      })
+    );
+  }
+
+  /**
+   * When "Upcoming" tab is Selected, set initialized rides to only those in the future
+   * Sets nearest rides to future-filtered rides, which is resposible for rendering rides
+   */
+  function setRidesToUpcoming() {
+    clearFilters();
+    setInitializedRides(filterRidesByUpcoming({ rides: data }));
+    setNearestRides(
+      orderRidesByNearest({
+        rides: filterRidesByUpcoming({ rides: data }),
+        user: user,
+      })
+    );
+  }
+
+  /**
+   * When "Nearest" tab is Selected, set initialized rides back to the raw list of rides fetched from API
+   * Set nearest rides to raw data ordered by nearest, which is resposible for rendering rides
+   */
+  function setRidesToDefault() {
+    clearFilters();
+    setInitializedRides(data);
+    setNearestRides(
+      orderRidesByNearest({
+        rides: data,
+        user: user,
+      })
+    );
+  }
+
+  // Filter Functions
   function toggleFilters() {
     setShowFilters(!showFilters);
   }
@@ -79,7 +146,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
     setStateFilter("");
   }
 
-  //TODO: Cut or Keep?
+  // Function to allow Filter Dropdown to be dismissed by clicking outside it
   function useOutsideAlerter(ref: any, dropdownRef: any) {
     useEffect(() => {
       /**
@@ -103,6 +170,7 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
     }, [ref]);
   }
 
+  // References to filter dropdown for the ClickOutside events
   const moreWrapperRef = useRef(null);
   const dropdownRef = useRef(null);
   useOutsideAlerter(moreWrapperRef, dropdownRef);
@@ -111,25 +179,33 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
     <Layout user={user}>
       <div className="z-0 flex flex-col items-start min-h-screen px-16 py-16 bg-midGray">
         <div className="flex flex-row items-start justify-between w-full">
-          {/* Page Select */}
+          {/* Tab Select */}
           <div className="pb-16 text-xl ">
             <ul className="flex flex-row items-center justify-between space-x-8">
-              <li className="font-semibold border-b-2 border-solid border-primary text-primary">
-                <Link href="/nearest">{"Nearest rides"}</Link>
-              </li>
+              <TabHeading
+                isSelected={tabSelected == 0}
+                setIsSelected={setTabSelected}
+                tabFunction={setRidesToDefault}
+                label={"Nearest"}
+                id={0}
+              />
               {upcomingRides && (
-                <li className="text-lightGray hover:text-primary">
-                  <Link href="/upcoming">
-                    {"Upcoming (" + upcomingRides.length.toString() + ")"}
-                  </Link>
-                </li>
+                <TabHeading
+                  isSelected={tabSelected == 1}
+                  setIsSelected={setTabSelected}
+                  tabFunction={setRidesToUpcoming}
+                  label={"Upcoming (" + upcomingRides.length.toString() + ")"}
+                  id={1}
+                />
               )}
               {pastRides && (
-                <li className="text-lightGray hover:text-primary">
-                  <Link href="/past">
-                    {"Past (" + pastRides.length.toString() + ")"}
-                  </Link>
-                </li>
+                <TabHeading
+                  isSelected={tabSelected == 2}
+                  setIsSelected={setTabSelected}
+                  tabFunction={setRidesToPast}
+                  label={"Past (" + pastRides.length.toString() + ")"}
+                  id={2}
+                />
               )}
             </ul>
           </div>
@@ -181,6 +257,11 @@ function Nearest({ data, user }: { data: Ride[]; user: User }) {
                 ></RideCard>
               );
             })}
+          {nearestRides.length == 0 && (
+            <div className="flex justify-center text-lg font-bold tracking-wide text-primary">
+              Sorry, we could not find rides here! Try again later!
+            </div>
+          )}
         </div>
       </div>
     </Layout>
