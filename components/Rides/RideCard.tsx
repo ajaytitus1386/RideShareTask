@@ -22,8 +22,8 @@ const RideCard = ({ ride, distance }: { ride: Ride; distance: number }) => {
   }).format(date);
 
   return (
-    <div className="flex flex-row items-start justify-between w-full p-8 rounded-md text-lightGray h-fit bg-coal">
-      <div className="flex flex-row space-x-4">
+    <div className="flex flex-col items-center justify-between w-full p-8 rounded-md lg:items-start lg:flex-row text-lightGray h-fit bg-coal">
+      <div className="flex flex-col space-y-4 lg:space-x-4 lg:flex-row">
         {/* Image */}
         <div className="h-full rounded-md w-72 ">
           <img src={"/assets/satmap.png"}></img>
@@ -53,7 +53,7 @@ const RideCard = ({ ride, distance }: { ride: Ride; distance: number }) => {
           </ul>
         </div>
       </div>
-      <div className="flex flex-row space-x-2 text-primary">
+      <div className="flex flex-row py-2 lg:space-x-2 text-primary">
         <OvalCard label={ride.city}></OvalCard>
         <OvalCard label={ride.state}></OvalCard>
       </div>
