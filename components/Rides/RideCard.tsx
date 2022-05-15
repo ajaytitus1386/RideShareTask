@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import { Ride } from "../../models/ride";
 import OvalCard from "./OvalCard";
@@ -25,8 +26,14 @@ const RideCard = ({ ride, distance }: { ride: Ride; distance: number }) => {
     <div className="flex flex-col items-center justify-between w-full p-8 rounded-md lg:items-start lg:flex-row text-lightGray h-fit bg-coal">
       <div className="flex flex-col space-y-4 lg:space-x-4 lg:flex-row">
         {/* Image */}
-        <div className="h-full rounded-md w-72 ">
-          <img src={"/assets/satmap.png"}></img>
+        <div className="h-full overflow-hidden rounded-md w-72 ">
+          <Image
+            src={ride.map_url}
+            width={400}
+            height={240}
+            layout={"responsive"}
+            priority={true}
+          />
         </div>
         {/* Ride Info */}
         <div>
